@@ -17,7 +17,7 @@ y = df[0]
 y_enc = le.fit_transform(y)
 
 raw_text = df[1]
-
+#Prepare data
 processed = raw_text.str.replace(r'\b[\w\-.]+?@\w+?\.\w{2,4}\b','emailaddr')
 processed = processed.str.replace(r'(http[s]?\S+)|(\w+\.[A-Za-z]{2,4}\S*)','httpaddr')
 processed = processed.str.replace(r'£|\$', 'moneysymb')    
@@ -56,7 +56,7 @@ pd.DataFrame(
     index=[['actual', 'actual'], ['spam', 'ham']],
     columns=[['predicted', 'predicted'], ['spam', 'ham']]
 )
-
+#Clean data
 def preprocess_text(messy_string):
     #assert(type(messy_string) == str)
     cleaned = re.sub(r'\b[\w\-.]+?@\w+?\.\w{2,4}\b', 'emailaddr', messy_string)
@@ -75,7 +75,7 @@ def preprocess_text(messy_string):
         for term in cleaned.split()
         if term not in set(stop_words)
     )
-
+#Predict whether spam or ham
 def spam_filter(message):
     if clf.predict(vectorizer.transform([preprocess_text(message)])):
         return 'spam'
@@ -101,6 +101,7 @@ def result():
 		ham = 0
 		spam_list=[]
 		ham_list=[]
+		#Predicting ham or spam of 50 emails of user
 		for mail_id in imapper.listids(limit=50):
 			mail = imapper.mail(mail_id)
 			message_text = mail.body
